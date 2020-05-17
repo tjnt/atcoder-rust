@@ -48,28 +48,16 @@ fn main() {
     input! {
         n: usize,
         k: usize,
-        aa: [usize1;n]
+        x: [i64;n]
     }
-    let mut b = vec![None;n];
-    let mut v = Vec::new();
-    let mut p = 0;
-    let mut l = 0;
-    let mut r = 0;
-    for i in 0.. {
-        if let Some(x) = b[p] {
-            l = x;
-            r = i;
-            break;
-        }
-        b[p] = Some(i);
-        v.push(p);
-        p = aa[p];
+    use std::cmp::min;
+    let mut res = std::i64::MAX;
+    for i in 0..(n-k+1) {
+        let l = x[i];
+        let r = x[i+k-1];
+        let d = r - l + min(l.abs(), r.abs());
+        res = min(d, res);
     }
-
-    if k < l {
-        println!("{}", v[k] + 1);
-    } else {
-        println!("{}", v[l + (k-l) % (r-l)] + 1);
-    }
+    println!("{}", res);
 }
 /* vim:set foldmethod=marker: */

@@ -47,29 +47,13 @@ macro_rules! read_value {
 fn main() {
     input! {
         n: usize,
-        k: usize,
-        aa: [usize1;n]
+        s: String
     }
-    let mut b = vec![None;n];
-    let mut v = Vec::new();
-    let mut p = 0;
-    let mut l = 0;
-    let mut r = 0;
-    for i in 0.. {
-        if let Some(x) = b[p] {
-            l = x;
-            r = i;
-            break;
-        }
-        b[p] = Some(i);
-        v.push(p);
-        p = aa[p];
-    }
-
-    if k < l {
-        println!("{}", v[k] + 1);
+    let (t1,t2) = s.split_at(n/2);
+    if t1 == t2 {
+        println!("Yes");
     } else {
-        println!("{}", v[l + (k-l) % (r-l)] + 1);
+        println!("No");
     }
 }
 /* vim:set foldmethod=marker: */
