@@ -66,6 +66,9 @@ impl ModInt<Num> {
         }
         result
     }
+    pub fn inv(self) -> ModInt<Num> {
+        self.pow(MOD - 2)
+    }
     pub fn factorial(self) -> ModInt<Num> {
         let mut cur = ModInt(1);
         for i in 2..(self.0 + 1) {
@@ -165,7 +168,7 @@ impl Div<Num> for ModInt<Num> {
         if rhs >= MOD {
             rhs %= MOD
         }
-        self * ModInt(rhs).pow(MOD - 2)
+        self * ModInt(rhs).inv()
     }
 }
 impl Div<ModInt<Num>> for ModInt<Num> {
@@ -187,38 +190,30 @@ impl DivAssign<ModInt<Num>> for ModInt<Num> {
 
 pub struct BiCoef {
     fact: Vec<ModInt<Num>>,
-    inv:  Vec<ModInt<Num>>,
-    finv: Vec<ModInt<Num>>
+    finv: Vec<ModInt<Num>>,
 }
-
 impl BiCoef {
     pub fn new(n: usize) -> BiCoef {
         let n = n + 1;
-        let mut fact: Vec<ModInt<Num>> = vec![ModInt(1);n];
-        let mut inv:  Vec<ModInt<Num>> = vec![ModInt(1);n];
-        let mut finv: Vec<ModInt<Num>> = vec![ModInt(1);n];
-        for i in 2..n {
-            fact[i] = fact[i-1] * i;
-            inv[i] = ModInt(MOD) - inv[MOD%i] * (MOD/i);
-            finv[i] = finv[i-1] * inv[i];
+        let mut fact: Vec<ModInt<Num>> = vec![ModInt(1); n];
+        let mut finv: Vec<ModInt<Num>> = vec![ModInt(1); n];
+        for i in 1..n {
+            fact[i] = fact[i - 1] * i
+        }
+        finv[n - 1] = fact[n - 1].inv();
+        for i in (1..n).rev() {
+            finv[i - 1] = finv[i] * i
         }
         BiCoef {
             fact: fact,
-            inv:  inv,
             finv: finv,
         }
     }
     pub fn factorial(self, n: usize) -> ModInt<Num> {
         self.fact[n]
     }
-    pub fn inverse(self, n: usize) -> ModInt<Num> {
-        self.inv[n]
-    }
-    pub fn fact_inverse(self, n: usize) -> ModInt<Num> {
-        self.finv[n]
-    }
     pub fn combination(self, n: usize, r: usize) -> ModInt<Num> {
-        self.fact[n] * self.finv[r] * self.finv[n-r]
+        self.fact[n] * self.finv[r] * self.finv[n - r]
     }
 }
 
@@ -227,20 +222,18 @@ fn main() {
         x: i64,
         y: i64,
     }
-    let t = 2 * x - y;
-    if t % 3 != 0 {
+    if (x+y) % 3 != 0 {
         println!("0");
         return;
     }
-    let m = t / 3;
-    let n = x - (2*m);
-    if n < 0 || m < 0 {
+    let n = (x+y) / 3;
+    if x < n || y < n {
         println!("0");
         return;
     }
-    let n = n as usize;
-    let m = m as usize;
-    let bi = BiCoef::new(n+m);
-    println!("{}", bi.combination(n+m,n).value());
+    let x = (x-n) as usize;
+    let y = (y-n) as usize;
+    let bi = BiCoef::new(x+y);
+    println!("{}", bi.combination(x+y,y).value());
 }
 /* vim:set foldmethod=marker: */
