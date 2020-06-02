@@ -2,7 +2,7 @@
 name = "atcoder-rust"
 version = "0.2.0"
 authors = ["tjnt <3m2dyzxu@gmail.com>"]
-edition = "2020"
+edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
